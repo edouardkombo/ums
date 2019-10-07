@@ -104,20 +104,29 @@ A graphQl query example accessible to non authenticated users
 ## Installation guide
 Download this repository somewhere in your server (eg: /var/www/{repo}).
 
+ - cd /var/www
+ - git clone https://github.com/edouardkombo/ums
  - Install Docker [https://docs.docker.com/install/](https://docs.docker.com/install/)
  - Install Docker-compose [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
  - Install Yarn && npm
- - cd /var/www/{repo}
+ - cd /var/www/ums
  - docker-compose pull # Download the latest versions of the pre-built images
  - docker-compose up -d # Running in detach mode
  - docker-compose exec php bin/console doctrine:fixtures:load #Load dummy content (groups, genders, skills and admin user with (email: admin@site.com / password: password123)
- - cd /var/www/{repo}/client-vue
- - yarn install && yarn start (Can't manage yet to ship it with Docker)
+ - cd client-vue
+ - yarn install && yarn start (Can't manage yet to ship it with Docker, so we need to start it manually for now)
  
 **IMPORTANT: Replace in the project all the occurences of  http://185.247.117.219 by your own IP** 
 
 More infos: [https://api-platform.com/docs/distribution/](https://api-platform.com/docs/distribution/)
 
+
+# Potential bugs
+
+ 1. I noticed that sometimes (randomly) when login, the api sends a 401 unauthorized with "JWT bad credentials" (resetting password through admin makes it work again)
+ 2. in the front and admin, I didn't implement yet a feature to detect on each query if the user token is still valid, in order to redirect to login page. As a consequence, if you are logged in too long, the token expires and when you will execute an action, it will trigger an error without logging you off.
+ 
+ 
 ## Author
 Edouard Kombo (@edouardkombo)
 
