@@ -113,6 +113,8 @@ Download this repository somewhere in your server (eg: /var/www/{repo}).
  - docker-compose exec php bin/console doctrine:fixtures:load #Load dummy content (groups, genders, skills and admin user with (email: admin@site.com / password: password123)
  - cd /var/www/{repo}/client-vue
  - yarn install && yarn start (Can't manage yet to ship it with Docker)
+ 
+**IMPORTANT: Replace in the project all the occurences of  http://185.247.117.219 by your own IP** 
 
 More infos: [https://api-platform.com/docs/distribution/](https://api-platform.com/docs/distribution/)
 
