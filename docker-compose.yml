@@ -111,6 +111,21 @@ services:
     ports:
       - "82:3000"
 
+  client-angular: # The name of the service
+    #container_name: angularcontainer  # Container name
+    image: ${CONTAINER_REGISTRY_BASE}/client-angular
+    build:
+      context: ./client-angular
+      cache_from:
+        - ${CONTAINER_REGISTRY_BASE}/client-angular
+    volumes: # Volume binding
+      - ./client-angular:/usr/src/client-angular:rw,cached
+      - /usr/src/client-angular/node_modules  
+    ports: 
+      - '4200:4200' # Port mapping
+    command: > 
+      /bin/sh -c "yarn install && ng serve --host 0.0.0.0 --port 4200"
+
   admin:
     # Use a static website hosting service in production
     # See https://facebook.github.io/create-react-app/docs/deployment
