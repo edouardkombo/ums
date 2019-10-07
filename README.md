@@ -114,8 +114,11 @@ Download this repository somewhere in your server (eg: /var/www/{repo}).
  - docker-compose up -d # Running in detach mode
  - docker-compose exec php bin/console doctrine:fixtures:load #Load dummy content (groups, genders, skills and admin user with (email: admin@site.com / password: password123)
  - cd client-vue
- - yarn install && yarn start (Can't manage yet to ship it with Docker, so we need to start it manually for now)
- 
+ - yarn install && yarn start # Can't manage yet to ship it with Docker, so we need to start it manually for now
+
+
+**IMPORTANT: Feel free to use a background runner for the front like PM2 or nohup https://medium.com/dailyjs/vue-js-simultaneously-running-express-and-webpack-dev-server-292f4a7ed7a3**
+
 **IMPORTANT: Replace in the project all the occurences of  http://185.247.117.219 by your own IP** 
 
 More infos: [https://api-platform.com/docs/distribution/](https://api-platform.com/docs/distribution/)
