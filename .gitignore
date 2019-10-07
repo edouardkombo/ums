@@ -1,0 +1,16 @@
+/docker-compose.override.yaml
+/docker-compose.override.yml
+.DS_Store
+node_modules/
+*/node_modules/
+dist/
+npm-debug.log
+yarn-error.log
+(
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
