@@ -166,7 +166,7 @@ class User implements UserInterface
      *         @ORM\JoinColumn(name="skill_id", referencedColumnName="id")
      *     }
      * )
-     * @ApiSubresource
+     * @ApiSubresource(maxDepth=1)
      * @Groups({"user_get","user_create","role_a","role_b","role_c"}) 
      */
     private $skills;
@@ -181,7 +181,6 @@ class User implements UserInterface
      *
      * @ORM\ManyToOne(targetEntity=MediaObject::class)
      * @ORM\JoinColumn(nullable=true)
-     * @ApiSubResource
      * @ApiProperty(iri="http://schema.org/image")
      * @Groups({"user_get","user_create","role_a","role_b","role_c"}) 
      */
