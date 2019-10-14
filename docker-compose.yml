@@ -111,16 +111,16 @@ services:
     ports:
       - "82:3000"
 
-  client-angular: # The name of the service
+  client-angular7: # The name of the service
     #container_name: angularcontainer  # Container name
-    image: ${CONTAINER_REGISTRY_BASE}/client-angular
+    image: ${CONTAINER_REGISTRY_BASE}/client-angular7
     build:
-      context: ./client-angular
+      context: ./client-angular7
       cache_from:
-        - ${CONTAINER_REGISTRY_BASE}/client-angular
+        - ${CONTAINER_REGISTRY_BASE}/client-angular7
     volumes: # Volume binding
-      - ./client-angular:/usr/src/client-angular:rw,cached
-      - /usr/src/client-angular/node_modules  
+      - ./client-angular7:/usr/src/client-angular7:rw,cached
+      - /usr/src/client-angular7/node_modules  
     ports: 
       - '4200:4200' # Port mapping
     command: > 

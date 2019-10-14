@@ -1,0 +1,9 @@
+<h1>Hi {{currentUser.firstname}}!</h1>
+<p>Congratulations, you're logged in with Angular 7!!</p>
+<ul>
+    <li 
+        *ngFor="let field of exposableUser | keyvalue"
+    >
+        <span><b>{{field.key}}</b>: {{ user.getPropertyValue(field.key, field.value) }}</span>
+    </li>
+</ul>

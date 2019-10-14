@@ -1,0 +1,99 @@
+<h2>{{ messages.title }}</h2>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="gender">Gender: </label>
+        <div *ngFor="let g of genders" class="custom-control custom-radio custom-control-inline">
+          <input type="radio" class="custom-control-input form-control" name="gender" id={{g.name+g.id}} value={{g.id}} formControlName="gender">
+          <label class="custom-control-label" for={{g.name+g.id}} >{{g.name}}</label>
+        </div>
+        <div *ngIf="submitted && f.gender.errors" class="invalid-feedback">
+            <div *ngIf="f.gender.errors.required">Gender is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="group">Group: </label>
+        <select name="group" class="custom-control custom-radio custom-control-inline" formControlName="group" >
+          <option 
+            *ngFor="let g of groups"  
+            id={{g.name+g.id}} 
+            value={{g.id}}
+          >
+           {{g.name}}
+          </option>
+        </select>
+        <div *ngIf="submitted && f.group.errors" class="invalid-feedback">
+            <div *ngIf="f.group.errors.required">Group is required</div>
+        </div>
+    </div>  
+    <div class="form-group">
+        <label for="firstname">First Name</label>
+        <input type="text" formControlName="firstname" class="form-control"  />
+        <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
+            <div *ngIf="f.firstname.errors.required">First Name is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="lastname">Last Name</label>
+        <input type="text" formControlName="lastname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }" />
+        <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
+            <div *ngIf="f.lastname.errors.required">Last Name is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+        <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+            <div *ngIf="f.username.errors.required">Username is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+            <div *ngIf="f.email.errors.required">Email is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="telephone">Telephone</label>
+        <input type="text" formControlName="telephone" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.telephone.errors }" />
+        <div *ngIf="submitted && f.telephone.errors" class="invalid-feedback">
+            <div *ngIf="f.telephone.errors.required">Telephone is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="dob">Date of birth</label>
+        <div class="input-group">
+          <ejs-datepicker id='datepicker' formControlName="dob" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dob.errors }" placeholder='Select a date' [value]=dateValue format ='yyyy-MM-dd'></ejs-datepicker>
+        </div>
+        <div *ngIf="submitted && f.dob.errors" class="invalid-feedback">
+            <div *ngIf="f.dob.errors.required">Date Of Birth is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="skills">Skills: </label>
+        <angular2-multiselect  name="dropdown" 
+              [data]="dropdownList" 
+              [ngModelOptions]="{standalone: true}" 
+              [(ngModel)]="selectedItems" 
+              [settings]="dropdownSettings" 
+              (onSelect)="onItemSelect($event)" 
+              (onDeSelect)="OnItemDeSelect($event)"
+              (onSelectAll)="onSelectAll($event)"
+              (onDeSelectAll)="onDeSelectAll($event)" disabled>
+      </angular2-multiselect>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <div class="form-group-hint">6 characters min, one number and one uppercase letter</div>
+        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+            <div *ngIf="f.password.errors.required">Password is required</div>
+            <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <button [disabled]="loading" class="btn btn-primary">{{ messages.action.submit }}</button>
+        <img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        <a routerLink="/login" class="btn btn-link">{{ messages.action.cancel }}</a>
+    </div>
+</form>
