@@ -1,1 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+.navbar #editImageIcon {
+    position: absolute;
+    top: 72px;
+    left: 85px;
+    color: #527bff;
+}

@@ -4,10 +4,12 @@
         <a class="nav-item nav-link">
           <img 
                [src]="currentUser.image" 
-               width="80px" height="80px" 
+               width="80px" height="80px"
+               style="background-color:grey;"
                (click)="file.click()"
                (error)="onImgError($event)" 
           >
+          <i class='fas fa-pencil-alt' id="editImageIcon"></i>
         </a>
         <form style="display:none;">
             <div class="form-group">
@@ -45,6 +47,6 @@
 <!-- credits -->
 <div class="text-center">
     <p>
-        <a routerLink="/" target="_top">UMS - Angular 7 Client</a>
+        <a routerLink="/" target="_top">UMS - Angular7 Client</a>
     </p>
 </div>
