@@ -1,5 +1,5 @@
 <h2>{{ messages.title }}</h2>
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="componentForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
         <label for="gender">Gender: </label>
         <div *ngFor="let g of genders" class="custom-control custom-radio custom-control-inline">
@@ -55,6 +55,7 @@
     </div>
     <div class="form-group">
         <label for="telephone">Telephone</label>
+        <div class="form-group-hint">Numbers only</div>
         <input type="text" formControlName="telephone" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.telephone.errors }" />
         <div *ngIf="submitted && f.telephone.errors" class="invalid-feedback">
             <div *ngIf="f.telephone.errors.required">Telephone is required</div>

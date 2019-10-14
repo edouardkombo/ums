@@ -39,9 +39,9 @@ export class RegisterComponent implements OnInit {
         }
           
         this.messages = {
-            "title": "Update my profile",
+            "title": "Register",
             "action": {
-                "submit": "Update",
+                "submit": "Register",
                 "cancel": "Cancel",
             }
         };
