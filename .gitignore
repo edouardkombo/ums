@@ -4,6 +4,7 @@
 node_modules/
 */node_modules/
 dist/
+api/public/media/
 npm-debug.log
 yarn-error.log
 (

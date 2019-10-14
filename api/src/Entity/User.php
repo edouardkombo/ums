@@ -91,7 +91,7 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\Regex(
      *     pattern="/^[A-Za-z0-9_]$/",
      *     match=false,
@@ -229,7 +229,6 @@ class User implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
-        $this->username = $email;
 
         return $this;
     }
