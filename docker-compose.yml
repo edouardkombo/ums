@@ -21,6 +21,11 @@ services:
       - ./api:/srv/api:rw,cached
       # If you develop on Linux, uncomment the following line to use a bind-mounted host directory instead
       # - ./api/var:/srv/api/var:rw
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "1"
+            max-size: "5m"
 
   api:
     image: ${CONTAINER_REGISTRY_BASE}/nginx
@@ -35,6 +40,11 @@ services:
       - ./api/public:/srv/api/public:ro
     ports:
       - "8080:80"
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "1"
+            max-size: "5m"
 
   cache-proxy:
     image: ${CONTAINER_REGISTRY_BASE}/varnish
@@ -50,6 +60,11 @@ services:
       - /usr/local/var/varnish:exec
     ports:
       - "8081:80"
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "1"
+            max-size: "5m"
 
   db:
     # In production, you may want to use a managed database service
@@ -65,6 +80,11 @@ services:
       # - ./docker/db/data:/var/lib/postgresql/data:rw
     ports:
       - "5432:5432"
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "1"
+            max-size: "5m"
 
   mercure:
     # In production, you may want to use the managed version of Mercure, https://mercure.rocks
@@ -78,6 +98,11 @@ services:
       - DEMO=1
     ports:
       - "1337:80"
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "1"
+            max-size: "5m"
 
   client:
     # Use a static website hosting service in production
@@ -94,69 +119,94 @@ services:
       - /usr/src/client/node_modules
     ports:
       - "80:3000"
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "1"
+            max-size: "5m"
 
-  client-vue:
-    # Use a static website hosting service in production
-    # See https://facebook.github.io/create-react-app/docs/deployment
-    image: ${CONTAINER_REGISTRY_BASE}/client-vue
+  client-vue2: # The name of the service
+    #container_name: angularcontainer  # Container name
+    image: ${CONTAINER_REGISTRY_BASE}/client-vue2
     build:
-      context: ./client-vue
+      context: ./client-vue2
       cache_from:
-        - ${CONTAINER_REGISTRY_BASE}/client-vue
-    env_file:
-      - ./client-vue/.env
-    volumes:
-      - ./client-vue:/usr/src/client-vue:rw,cached
-      - /usr/src/client-vue/node_modules
-    ports:
-      - "82:3000"
+        - ${CONTAINER_REGISTRY_BASE}/client-vue2
+    volumes: # Volume binding
+      - ./client-vue2:/usr/src/client-vue2:rw,cached
+      - /usr/src/client-vue2/node_modules  
+    ports: 
+      - '4100:4100' # Port mapping
+    command: > 
+      /bin/sh -c "yarn install && yarn start --host 0.0.0.0 --port 4100"
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "1"
+            max-size: "5m"
 
   client-angular7: # The name of the service
-    #container_name: angularcontainer  # Container name
-    image: ${CONTAINER_REGISTRY_BASE}/client-angular7
-    build:
-      context: ./client-angular7
-      cache_from:
-        - ${CONTAINER_REGISTRY_BASE}/client-angular7
-    volumes: # Volume binding
-      - ./client-angular7:/usr/src/client-angular7:rw,cached
-      - /usr/src/client-angular7/node_modules  
-    ports: 
-      - '4200:4200' # Port mapping
-    command: > 
-      /bin/sh -c "yarn install && ng serve --host 0.0.0.0 --port 4200"
+      #container_name: angularcontainer  # Container name
+      image: ${CONTAINER_REGISTRY_BASE}/client-angular7
+      build:
+        context: ./client-angular7
+        cache_from:
+          - ${CONTAINER_REGISTRY_BASE}/client-angular7
+      volumes: # Volume binding
+        - ./client-angular7:/usr/src/client-angular7:rw,cached
+        - /usr/src/client-angular7/node_modules  
+      ports: 
+        - '4200:4200' # Port mapping
+      command: > 
+        /bin/sh -c "yarn install && ng serve --host 0.0.0.0 --port 4200"
+      logging:
+          driver: "json-file"
+          options:
+              max-file: "1"
+              max-size: "5m"
 
   admin:
-    # Use a static website hosting service in production
-    # See https://facebook.github.io/create-react-app/docs/deployment
-    image: ${CONTAINER_REGISTRY_BASE}/admin
-    build:
-      context: ./admin
-      cache_from:
-        - ${CONTAINER_REGISTRY_BASE}/admin
-    volumes:
-      - ./admin:/usr/src/admin:rw,cached
-      - /usr/src/admin/node_modules
-    ports:
-      - "81:3000"
+      # Use a static website hosting service in production
+      # See https://facebook.github.io/create-react-app/docs/deployment
+      image: ${CONTAINER_REGISTRY_BASE}/admin
+      build:
+        context: ./admin
+        cache_from:
+              - ${CONTAINER_REGISTRY_BASE}/admin
+      volumes:
+          - ./admin:/usr/src/admin:rw,cached
+          - /usr/src/admin/node_modules
+      command: >
+          /bin/sh -c "yarn install && yarn add react-scripts --save && yarn start"    
+      ports:
+          - "81:3000"
+      logging:
+          driver: "json-file"
+          options:
+              max-file: "1"
+              max-size: "5m"
 
   h2-proxy:
-    # Don't use this proxy in prod
-    build:
-      context: ./h2-proxy
-    depends_on:
-      - client
-      - client-vue
-      - admin
-      - api
-      - cache-proxy
-      - mercure
-    ports:
-      - "443:443"
-      - "445:445"
-      - "444:444"
-      - "8443:8443"
-      - "8444:8444"
+      # Don't use this proxy in prod
+      build:
+        context: ./h2-proxy
+      depends_on:
+        - client
+        - admin
+        - api
+        - cache-proxy
+        - mercure
+      ports:
+        - "443:443"
+        - "445:445"
+        - "444:444"
+        - "8443:8443"
+        - "8444:8444"
+      logging:
+          driver: "json-file"
+          options:
+              max-file: "1"
+              max-size: "5m"
 
 volumes:
   db-data: {}
