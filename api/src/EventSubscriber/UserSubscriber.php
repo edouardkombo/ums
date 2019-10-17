@@ -10,6 +10,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEVent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserSubscriber implements EventSubscriberInterface {
 
@@ -21,14 +23,14 @@ class UserSubscriber implements EventSubscriberInterface {
 
     public function __construct(UserPasswordEncoderInterface $userPasswordEncoder, TokenStorageInterface $tokenStorage)
     {
-	    $this->passwordEncoder = $userPasswordEncoder;
+	      $this->passwordEncoder = $userPasswordEncoder;
         $this->tokenStorage = $tokenStorage;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-	        KernelEvents::VIEW => ['setPassword', EventPriorities::PRE_WRITE],
+	        KernelEvents::VIEW => ['setPassword', EventPriorities::PRE_VALIDATE],
 	        KernelEvents::REQUEST => ['gqlAcl', EventPriorities::PRE_READ],
 	        KernelEvents::REQUEST => ['resolveMe', EventPriorities::PRE_READ],
         ];
@@ -36,14 +38,21 @@ class UserSubscriber implements EventSubscriberInterface {
 
     public function setPassword(ViewEvent $event)
     {
+        $request = Request::createFromGlobals();
+        $method = $request->server->get('REQUEST_METHOD');
+        $passwordInRequest = (array) json_decode(file_get_contents("php://input"));
+      
         $user = $event->getControllerResult();
-
-        if ($user instanceof User && $user->getPassword()) {
-            $password = $this->passwordEncoder->encodePassword($user, $user->getPassword());
+        $currentPassword = $user->getPassword();
+      
+        //If password has been specified in current request
+        if ($user instanceof User && $currentPassword && in_array($method, ['PUT','POST']) && !empty($passwordInRequest['password'])) {
+            $password = $this->passwordEncoder->encodePassword($user, $currentPassword);
             $user->setPassword($password);
         }
     }
-
+  
+  
     /**
      * ApiPlatform does not provide a contextBuilder for GraphQl yet
      * This is a dirty temporary solution for ACL with GraphQl
@@ -82,7 +91,6 @@ class UserSubscriber implements EventSubscriberInterface {
         }
 
         $user = $this->tokenStorage->getToken()->getUser();
-
         if (!$user instanceof User) {
             return;
         }
