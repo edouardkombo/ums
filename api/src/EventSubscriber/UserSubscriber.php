@@ -30,7 +30,7 @@ class UserSubscriber implements EventSubscriberInterface {
     public static function getSubscribedEvents()
     {
         return [
-	        KernelEvents::VIEW => ['setPassword', EventPriorities::PRE_VALIDATE],
+	        KernelEvents::VIEW => ['setPassword', EventPriorities::PRE_READ],
 	        KernelEvents::REQUEST => ['gqlAcl', EventPriorities::PRE_READ],
 	        KernelEvents::REQUEST => ['resolveMe', EventPriorities::PRE_READ],
         ];

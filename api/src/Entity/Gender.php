@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ApiResource(
@@ -36,6 +37,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * )
  * @ORM\Entity(repositoryClass="App\Repository\GenderRepository")
  * @ORM\Table(name="genders")
+ * @Gedmo\TranslationEntity(class="App\Entity\Translation\GenderTranslation")
  * @UniqueEntity(
  *     fields={"name"},
  *     message="entity.gender.name.already.exists"
@@ -53,6 +55,7 @@ class Gender
     protected $id;
 
     /**
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=20)
      * @Assert\Regex(
      *     pattern="/^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/",
@@ -67,6 +70,21 @@ class Gender
     * @ApiSubResource(maxDepth=1)
     */
     private $users;
+  
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     * @Gedmo\Slug(fields={"name"})
+     */
+    private $slug;
+  
+    /**
+     * @var Locale
+     *
+     * @Gedmo\Locale
+     */
+    private $locale;
 
     public function __construct()
     {
@@ -117,5 +135,29 @@ class Gender
             }
         }
         return $this;
-    }    
+    }
+  
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+  
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale): self
+    {
+        $this->locale = $slug;
+
+        return $this;
+    }
 }
